@@ -1,1 +1,1 @@
-create my_first_directory in /tmp/ directory
+Create my_first_directory in /tmp/ directory
