@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 
 """
+
 Gather data from an API and export in JSON format
+
 """
 
 import json
