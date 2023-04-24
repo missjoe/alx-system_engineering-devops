@@ -1,31 +1,23 @@
 #!/usr/bin/python3
-
-"""
-
-Gather data from an API and export in JSON format
-
-"""
-
+# csv exported
 import json
-import requests
+from requests import get
 from sys import argv
 
+
+def jsonWrite(user):
+    """writes to csv"""
+    data = get('https://jsonplaceholder.typicode.com/todos?userId={}'.format(
+        user)).json()
+    name = get('https://jsonplaceholder.typicode.com/users/{}'.format(
+        user)).json().get('username')
+    ordered = []
+    for line in data:
+        ordered.append({"task": line.get('title'), "completed":
+                        line.get('completed'), "username": name})
+    with open('{}.json'.format(user), 'w') as f:
+        json.dump({user: ordered}, f)
+
+
 if __name__ == "__main__":
-    user_id = argv[1]
-    base_url = "https://jsonplaceholder.typicode.com/"
-    employee = requests.get(base_url + "users/{}".format(user_id)).json()
-    tasks = requests.get(base_url + "todos", params={"userId": user_id}).json()
-
-    completed_tasks = []
-    for task in tasks:
-        if task.get("completed"):
-            completed_tasks.append({
-                "task": task.get("title"),
-                "completed": task.get("completed"),
-                "username": employee.get("username")
-            })
-
-    result = {employee.get("id"): completed_tasks}
-
-    with open(f"{user_id}.json", "w") as f:
-        json.dump(result, f)
+    jsonWrite(int(argv[1]))
