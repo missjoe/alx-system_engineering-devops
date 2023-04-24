@@ -1,23 +1,28 @@
 #!/usr/bin/python3
-# csv exported
+"""export data in the JSON format."""
 import json
-from requests import get
-from sys import argv
+import requests
+import sys
 
 
-def jsonWrite(user):
-    """writes to csv"""
-    data = get('https://jsonplaceholder.typicode.com/todos?userId={}'.format(
-        user)).json()
-    name = get('https://jsonplaceholder.typicode.com/users/{}'.format(
-        user)).json().get('username')
-    ordered = []
-    for line in data:
-        ordered.append({"task": line.get('title'), "completed":
-                        line.get('completed'), "username": name})
-    with open('{}.json'.format(user), 'w') as f:
-        json.dump({user: ordered}, f)
+if __name__ == '__main__':
+    users = requests.get('https://jsonplaceholder.typicode.com/users').json()
+    todos = requests.get('https://jsonplaceholder.typicode.com/todos').json()
 
+    todo_dict = {}
+    for user in users:
+        user_id = str(user['id'])
+        todo_list = []
+        for todo in todos:
+            if todo['userId'] == user['id']:
+                task = todo['title']
+                completed = todo['completed']
+                todo_list.append({
+                    "username": user['username'],
+                    "task": task,
+                    "completed": completed
+                })
+        todo_dict[user_id] = todo_list
 
-if __name__ == "__main__":
-    jsonWrite(int(argv[1]))
+    with open('todo_all_employees.json', 'w') as f:
+        json.dump(todo_dict, f)
