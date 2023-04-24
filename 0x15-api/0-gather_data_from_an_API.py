@@ -1,13 +1,11 @@
 #!/usr/bin/python3
 
 """
-
 Gather data from an API
-
 """
 
-from sys import argv
 import requests
+from sys import argv
 
 if __name__ == "__main__":
     user_id = argv[1]
@@ -20,8 +18,8 @@ if __name__ == "__main__":
         if task.get("completed"):
             completed_tasks.append(task.get("title"))
 
-print("Employee {} is done with tasks({}/{}):".format(
-    employee.get("name"), len(completed_tasks), len(tasks)))
+    print("Employee {} is done with tasks({}/{}):".format(
+        employee.get("name"), len(completed_tasks), len(tasks)))
 
-for task in completed_tasks:
-    print("\t {}".format(task))
+    for task in completed_tasks:
+        print("\t {}".format(task))
