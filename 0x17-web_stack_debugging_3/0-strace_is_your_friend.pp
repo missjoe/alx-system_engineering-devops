@@ -1,7 +1,20 @@
- # Fix Apache 500 error using strace
- 
- exec { 'fix-wordpress':
-   command => '/usr/sbin/service apache2 restart',
-   path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-   onlyif  => 'curl -sI 127.0.0.1:80 | grep "HTTP/1.0 500"',
- }
+class webserver {
+  package { 'apache2':
+    ensure => installed,
+  }
+
+  file { '/etc/apache2/ports.conf':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    content => "Listen 8080\n",
+    require => Package['apache2'],
+  }
+
+  service { 'apache2':
+    ensure  => running,
+    enable  => true,
+    require => File['/etc/apache2/ports.conf'],
+  }
+}
