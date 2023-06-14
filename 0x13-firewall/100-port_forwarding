@@ -1,0 +1,7 @@
+# Configure web-01 so that its firewall redirects port 8080/TCP to port 80/TCP.
+# Your answer file should be a copy of the ufw configuration file that you modified to make this happen
+
+sudo su
+sudo iptables -A PREROUTING -t nat -p tcp --dport 8080 -j REDIRECT --to-port 80
+sudo iptables-save > /etc/iptables/rules.v4
+exit
